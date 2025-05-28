@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const stateRoutes = require('./Routes/State');
 const cityRoutes = require('./Routes/City');
 const userRoutes = require('./Routes/UserRout');
+const shippersRoutes = require('./Routes/ShipperRoutes')
+const orderRoute = require('./Routes/OrderRoute')
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -36,7 +38,8 @@ app.listen(port, () => {
 app.use('/api/states', stateRoutes);
 app.use('/api/cities', cityRoutes);
 app.use('/api/users', userRoutes);
-
+app.use('/api/shipper', shippersRoutes);
+app.use('/api/orders', orderRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

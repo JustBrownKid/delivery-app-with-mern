@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Otp = require('../models/Otp');
+const State = require('../models/State'); 
+const City = require('../models/City');  
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -63,15 +66,62 @@ html: `
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name, phone, state_id, city_id } = req.body;
-    if (await User.findOne({ email })) {
+
+    // Validate required fields
+    if (!email || !password || !name || !phone || !state_id || !city_id) {
+      return res.status(400).send({ message: 'All fields are required' });
+    }
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(state_id)) {
+      return res.status(400).send({ message: 'Invalid state_id format' });
+    }
+    if (!mongoose.Types.ObjectId.isValid(city_id)) {
+      return res.status(400).send({ message: 'Invalid city_id format' });
+    }
+
+    // Check if state exists
+    const stateExists = await State.findById(state_id);
+    if (!stateExists) {
+      return res.status(400).send({ message: 'Invalid state_id' });
+    }
+
+    // Check if city exists
+    const cityExists = await City.findById(city_id);
+    if (!cityExists) {
+      return res.status(400).send({ message: 'Invalid city_id' });
+    }
+
+    // Optional: verify city belongs to the state
+    if (cityExists.state_id.toString() !== state_id) {
+      return res.status(400).send({ message: 'City does not belong to the specified state' });
+    }
+
+    // Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return res.status(400).send({ message: 'Email already exists' });
     }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, phone, password: hashedPassword, state_id, city_id });
+
+    // Create new user
+    const newUser = new User({
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+      state_id,
+      city_id,
+    });
+
     await newUser.save();
+
     res.status(201).send({ message: 'User registered successfully' });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    console.error('Registration error:', error);
+    res.status(500).send({ error: 'Internal server error' });
   }
 });
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Home = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/'); // Redirect to login page
+    navigate('/'); 
   };
 
   return (
@@ -27,7 +28,12 @@ const Home = () => {
       <nav className="flex justify-between items-center px-6 py-3 bg-gray-800 text-white font-sans">
         <div className="font-bold text-2xl">Delivery System</div>
         <ul className="flex space-x-6 list-none m-0 p-0">
-          <li className="cursor-pointer hover:text-gray-300">Create Order</li>
+          <li className="cursor-pointer hover:text-gray-300">
+  <Link to="/order">Create Order</Link>
+</li>
+          <li className="cursor-pointer hover:text-gray-300">
+  <Link to="/excel">Create Excel</Link>
+</li>
           <li className="cursor-pointer hover:text-gray-300">Order History</li>
           <li className="cursor-pointer hover:text-gray-300">Delivery Status</li>
         </ul>

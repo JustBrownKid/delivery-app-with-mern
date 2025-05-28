@@ -5,6 +5,8 @@ import Home from './components/Home';
 import OtpVerifyForm from './components/OtpVerifyForm';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
+import Order from './Order.jsx';
+import OrderExcel from './OrderExcel.jsx';
 
 function App() {
   const [otpEmail, setOtpEmail] = useState(null);
@@ -45,6 +47,10 @@ function App() {
         />
 
         <Route path="*" element={<Navigate to="/" replace />} />
+        
+    <Route path="/order" element={<Order />} />
+    <Route path="/excel" element={<OrderExcel />} />
+
       </Routes>
     </Router>
   );
