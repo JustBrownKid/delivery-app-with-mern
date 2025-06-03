@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const shipperSchema = new mongoose.Schema({
-  shiper_id: {
+  id_shipper: {
     type: String,
-    required: true,
     unique: true
   },
   name: {
@@ -43,18 +42,21 @@ function generateShiperId() {
 
 // Pre-save hook to generate shiper_id
 shipperSchema.pre('validate', async function (next) {
-  if (!this.shiper_id) {
+
+  if (!this.id_shipper) {
     let unique = false;
     while (!unique) {
       const newId = generateShiperId();
-      const existing = await mongoose.models.Shipper.findOne({ shiper_id: newId });
+      const existing = await mongoose.models.Shipper.findOne({ id_shipper: newId });
       if (!existing) {
-        this.shiper_id = newId;
+        this.id_shipper = newId;
         unique = true;
       }
     }
   }
   next();
 });
+
+
 
 module.exports = mongoose.model('Shipper', shipperSchema);

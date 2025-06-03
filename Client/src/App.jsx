@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 import Home from './components/Home';
 import OtpVerifyForm from './components/OtpVerifyForm';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
-import Order from './Order.jsx';
-import OrderExcel from './OrderExcel.jsx';
+import Order from './OrderCreate/Order.jsx';
+import OrderExcel from './OrderCreate/OrderExcel.jsx';
+import OrderHistory from './OrderHistory/OrderByShipper.jsx';
+import AWBTemplate  from './OrderHistory/AwbTemplate.jsx';
+
 
 function App() {
   const [otpEmail, setOtpEmail] = useState(null);
@@ -50,6 +54,10 @@ function App() {
         
     <Route path="/order" element={<Order />} />
     <Route path="/excel" element={<OrderExcel />} />
+    <Route path="/register" element={<RegisterForm />} />
+    <Route path="/orderhistory" element={<OrderHistory />} />
+    
+    <Route path="/template" element={<AWBTemplate  />} />
 
       </Routes>
     </Router>

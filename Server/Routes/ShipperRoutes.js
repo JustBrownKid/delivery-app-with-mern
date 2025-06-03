@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 
     const formattedShippers = shippers.map(shipper => ({
       id: shipper._id,
-      shiper_id: shipper.shiper_id,
+      shipper_id: shipper.id_shipper,
       name: shipper.name,
       phone: shipper.phone,
       email: shipper.email,
@@ -30,17 +30,25 @@ router.get('/', async (req, res) => {
 });
 
 
+router.get('/:id', async (req, res) => {
+  try {
+    const shipperId = req.params.id;
+    const shipper = await Shipper.findOne({id_shipper: shipperId});
+    if (!shipper) {
+      return res.status(404).json({ error: 'Shipper not found' });
+    }
+    res.status(200).json(shipper);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 // Create a new shipper
 router.post('/', async (req, res) => {
   try {
     const { name, email, phone, address, state_id, city_id } = req.body;
-
-    // Basic required fields check
     if (!name || !email || !phone || !address || !state_id || !city_id) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
-
-    // Check if state_id is a valid ObjectId and exists
     if (!mongoose.Types.ObjectId.isValid(state_id)) {
       return res.status(400).json({ error: 'Invalid state_id format.' });
     }
@@ -48,8 +56,6 @@ router.post('/', async (req, res) => {
     if (!state) {
       return res.status(404).json({ error: 'State not found.' });
     }
-
-    // Check if city_id is a valid ObjectId and exists
     if (!mongoose.Types.ObjectId.isValid(city_id)) {
       return res.status(400).json({ error: 'Invalid city_id format.' });
     }
@@ -57,8 +63,6 @@ router.post('/', async (req, res) => {
     if (!city) {
       return res.status(404).json({ error: 'City not found.' });
     }
-
-    // Create the shipper
     const shipper = await Shipper.create(req.body);
     res.status(201).json(shipper);
   } catch (error) {

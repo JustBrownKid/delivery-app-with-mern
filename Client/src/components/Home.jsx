@@ -34,7 +34,12 @@ const Home = () => {
           <li className="cursor-pointer hover:text-gray-300">
   <Link to="/excel">Create Excel</Link>
 </li>
-          <li className="cursor-pointer hover:text-gray-300">Order History</li>
+<li className="cursor-pointer hover:text-gray-300">
+  <Link to="/orderhistory">Order History</Link>
+</li>
+<li className="cursor-pointer hover:text-gray-300">
+  <Link to="/template">Order Template</Link>
+</li>
           <li className="cursor-pointer hover:text-gray-300">Delivery Status</li>
         </ul>
         <div className="flex items-center space-x-3">

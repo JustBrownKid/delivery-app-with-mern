@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
  */
 router.post('/', async (req, res) => {
     try {
-        const { name, short ,state_id } = req.body;
+        const { name, short ,state_id ,fee} = req.body;
         if (!name || !state_id) {
             return res.status(400).send({ message: "City name and stateId are required" });
         }
@@ -38,7 +38,8 @@ router.post('/', async (req, res) => {
         const city = await City.create({
             name,
             short,
-            state_id
+            state_id,
+            fee
         });
 
         res.status(201).json(city);
